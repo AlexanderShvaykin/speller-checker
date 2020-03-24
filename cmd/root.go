@@ -12,6 +12,8 @@ import (
 
 var path string
 
+const baseURL string = "https://speller.yandex.net/services/spellservice.json/checkText"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "ya-speller",
@@ -33,7 +35,8 @@ var rootCmd = &cobra.Command{
 			for scanner.Scan() {
 				line := scanner.Text()
 				fmt.Println(line)
-				url := "https://speller.yandex.net/services/spellservice.json/checkText?text=" + string(line)
+				// url := "https://speller.yandex.net/services/spellservice.json/checkText?text=" + string(line)
+				url := baseURL + string(line)
 
 				fmt.Println("Body:", api.Get(url))
 			}
