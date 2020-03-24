@@ -35,8 +35,7 @@ var rootCmd = &cobra.Command{
 			for scanner.Scan() {
 				line := scanner.Text()
 				fmt.Println(line)
-				// url := "https://speller.yandex.net/services/spellservice.json/checkText?text=" + string(line)
-				url := baseURL + string(line)
+				url := api.BuildURL(baseURL, map[string]string{"text": string(line)})
 
 				fmt.Println("Body:", api.Get(url))
 			}
