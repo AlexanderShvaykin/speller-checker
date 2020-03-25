@@ -1,4 +1,4 @@
-package api
+package httpclient
 
 // BuildURL build url with base url and params
 func BuildURL(base string, p map[string]string) string {

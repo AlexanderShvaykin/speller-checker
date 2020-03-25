@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"ya-speller/api"
+	"ya-speller/internal/httpclient"
 
 	"github.com/spf13/cobra"
 )
@@ -45,9 +45,9 @@ var rootCmd = &cobra.Command{
 
 			for scanner.Scan() {
 				line := scanner.Text()
-				url := api.BuildURL(baseURL, map[string]string{"text": string(line)})
+				url := httpclient.BuildURL(baseURL, map[string]string{"text": string(line)})
 				var mistakes []Mistake
-				if err := json.Unmarshal([]byte(api.Get(url)), &mistakes); err != nil {
+				if err := json.Unmarshal([]byte(httpclient.Get(url)), &mistakes); err != nil {
 					log.Fatal(err)
 				}
 				if len(mistakes) > 0 {
