@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"ya-speller/internal/httpclient"
 
 	"github.com/spf13/cobra"
@@ -30,6 +31,7 @@ var rootCmd = &cobra.Command{
 	Use:   "ya-speller",
 	Short: "Yandex speller checker",
 	Run: func(cmd *cobra.Command, _args []string) {
+
 		files, err := readFiles(path)
 		if err != nil {
 			log.Fatal("Dir not found")
@@ -41,21 +43,39 @@ var rootCmd = &cobra.Command{
 			}
 			defer file.Close()
 
-			scanner := bufio.NewScanner(file)
-
-			for scanner.Scan() {
-				line := scanner.Text()
-				url := httpclient.BuildURL(baseURL, map[string]string{"text": string(line)})
-				var mistakes []Mistake
-				if err := json.Unmarshal([]byte(httpclient.Get(url)), &mistakes); err != nil {
-					log.Fatal(err)
+			urls := make(chan string)
+			go func(out chan<- string, f *os.File) {
+				scanner := bufio.NewScanner(f)
+				for scanner.Scan() {
+					text := strings.TrimSpace(scanner.Text())
+					url := httpclient.BuildURL(baseURL, map[string]string{"text": `'` + string(text) + `'`})
+					urls <- url
 				}
-				if len(mistakes) > 0 {
-					fmt.Println(mistakes)
+				close(out)
+			}(urls, file)
+
+			for u := range urls {
+				in := make(chan Mistake)
+				go func(out chan<- Mistake, u string) {
+					var mistakes []Mistake
+					response := httpclient.Get(u)
+					if err := json.Unmarshal([]byte(response), &mistakes); err != nil {
+						fmt.Println(err, u, response)
+					}
+
+					for _, m := range mistakes {
+						out <- m
+					}
+					close(out)
+				}(in, u)
+
+				for m := range in {
+					fmt.Println(m)
 				}
 			}
 		}
-	},
+
+	}, // end Run
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
