@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -13,6 +14,16 @@ import (
 var path string
 
 const baseURL string = "https://speller.yandex.net/services/spellservice.json/checkText"
+
+// Mistake is spelling mistake
+type Mistake struct {
+	Word string
+	S    []string
+}
+
+func (m Mistake) String() string {
+	return fmt.Sprintf("[word: %s, suggestions: %s]", m.Word, m.S)
+}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -34,10 +45,14 @@ var rootCmd = &cobra.Command{
 
 			for scanner.Scan() {
 				line := scanner.Text()
-				fmt.Println(line)
 				url := api.BuildURL(baseURL, map[string]string{"text": string(line)})
-
-				fmt.Println("Body:", api.Get(url))
+				var mistakes []Mistake
+				if err := json.Unmarshal([]byte(api.Get(url)), &mistakes); err != nil {
+					log.Fatal(err)
+				}
+				if len(mistakes) > 0 {
+					fmt.Println(mistakes)
+				}
 			}
 		}
 	},
