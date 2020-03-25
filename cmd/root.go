@@ -16,6 +16,8 @@ var path string
 
 const baseURL string = "https://speller.yandex.net/services/spellservice.json/checkText"
 
+var exitCode int
+
 // Mistake is spelling mistake
 type Mistake struct {
 	Word string
@@ -70,10 +72,13 @@ var rootCmd = &cobra.Command{
 				}(in, u)
 
 				for m := range in {
+					exitCode = 1
 					fmt.Println(m)
 				}
 			}
 		}
+
+		os.Exit(exitCode)
 
 	}, // end Run
 }
