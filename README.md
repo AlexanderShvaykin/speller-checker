@@ -1,11 +1,8 @@
 Fast check locales files before deploy.
+Used API [Yandex.Speller](https://tech.yandex.ru/speller/doc/dg/concepts/About-docpage/).
 
 Usage
 
 ```
-cd project
-go install
 ya-speller -p some_dir
 ```
-
-The Project has the status of a WIP, documentation will be available later.
