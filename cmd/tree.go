@@ -7,18 +7,18 @@ import (
 )
 
 type treeFile struct {
-	root      string
-	name      string
-	isDir     bool
-	childrens []treeFile
-	size      int64
+	root   string
+	name   string
+	isDir  bool
+	childs []treeFile
+	size   int64
 }
 
 func (f *treeFile) readChildrens() bool {
 	if f.isDir {
-		childrens, err := readFiles(f.root + "/" + f.name)
+		childs, err := readFiles(f.root + "/" + f.name)
 		if err == nil {
-			f.childrens = childrens
+			f.childs = childs
 			return true
 		}
 
