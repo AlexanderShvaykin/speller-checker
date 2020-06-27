@@ -1,7 +1,7 @@
 run:
 	go run cmd/ya-speller/main.go
 test:
-	go test ./...
+	richgo test ./...
 build:
 	go build -o $(GOPATH)/bin/ya-speller cmd/ya-speller/main.go
 run-maillog:
