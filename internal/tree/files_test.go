@@ -24,7 +24,7 @@ func TestReadFiles(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ReadFiles(tt.args.root)
+			got, err := filesList(tt.args.root)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ReadFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
