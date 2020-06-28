@@ -6,7 +6,8 @@ import (
 	"strings"
 )
 
-func ReadFiles(root string, handler func(line string)) error {
+func ReadFiles(root string, handler func(line string)) (int, error) {
+	var count int
 	fileNames, err := filesList(root)
 	if err == nil {
 		for _, path := range fileNames {
@@ -16,9 +17,10 @@ func ReadFiles(root string, handler func(line string)) error {
 				for scanner.Scan() {
 					text := strings.TrimSpace(scanner.Text())
 					handler(text)
+					count++
 				}
 			}
 		}
 	}
-	return err
+	return count, err
 }

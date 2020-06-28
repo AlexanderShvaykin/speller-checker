@@ -33,11 +33,12 @@ func TestReadFiles(t *testing.T) {
 	for _, tt := range tests {
 		buff = []string{}
 		t.Run(tt.name, func(t *testing.T) {
-			if err := ReadFiles(tt.args.root, tt.args.handler); (err != nil) != tt.wantErr {
+			count, err := ReadFiles(tt.args.root, tt.args.handler)
+			if (err != nil) != tt.wantErr {
 				t.Errorf("ReadFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if len(tt.want) > 0 && !reflect.DeepEqual(buff, tt.want) {
+			if len(tt.want) > 0 && !reflect.DeepEqual(buff, tt.want) && count != len(buff) {
 				t.Errorf("ReadFiles() call handler with %v, want %v", buff, tt.want)
 			}
 		})
