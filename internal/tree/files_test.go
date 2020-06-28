@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestReadFiles(t *testing.T) {
+func TestFileList(t *testing.T) {
 	type args struct {
 		root string
 	}
@@ -26,11 +26,11 @@ func TestReadFiles(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := filesList(tt.args.root)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ReadFiles() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("filesList() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReadFiles() got = %v, want %v", got, tt.want)
+				t.Errorf("filesList() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
